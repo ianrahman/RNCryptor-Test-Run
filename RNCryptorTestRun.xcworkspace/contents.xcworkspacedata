@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:RNCryptor Test Run.xcodeproj">
+      location = "group:/Users/IAR/Desktop/RNCryptor-Test-Run/RNCryptorTestRun.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
