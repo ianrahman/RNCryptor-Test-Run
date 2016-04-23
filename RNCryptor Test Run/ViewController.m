@@ -7,7 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "RNCryptor/RNCryptor.h"
+
+@import RNCryptor;
 
 @interface ViewController ()
 
@@ -54,6 +55,41 @@
     [self.convertButton.topAnchor constraintEqualToAnchor:self.ciphertext.bottomAnchor constant:10].active = YES;
     [self.convertButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
     
+}
+
+// Encryption
+-(NSString *)encryptPlaintext {
+    
+    NSData *data = [self.plaintext.text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSString *password = self.password.text;
+    
+    NSData *ciphertext = [RNCryptor encryptData:data password:password];
+    
+    NSString *ciphertextString = [[NSString alloc] initWithData:ciphertext encoding:NSUTF8StringEncoding];
+    
+    return ciphertextString;
+}
+
+// Decryption
+-(NSString *)decryptCiphertext {
+    
+    NSData *ciphertext = [self.ciphertext.text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSString *password = self.password.text;
+    
+    NSError *error = nil;
+    
+    NSData *plaintext = [RNCryptor decryptData:ciphertext password:password error:&error];
+    
+    NSString *plaintextString = [[NSString alloc] initWithData:plaintext encoding:NSUTF8StringEncoding];
+    
+    if (error != nil) {
+        NSLog(@"ERROR:%@", error);
+        return error.description;
+    }
+    
+    return plaintextString;
 }
 
 @end
