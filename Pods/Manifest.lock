@@ -1,0 +1,10 @@
+PODS:
+  - RNCryptor (4.0.0)
+
+DEPENDENCIES:
+  - RNCryptor (~> 4.0.0-beta)
+
+SPEC CHECKSUMS:
+  RNCryptor: 59d6483908115af5c12b884db23392024e52a5fe
+
+COCOAPODS: 0.39.0
