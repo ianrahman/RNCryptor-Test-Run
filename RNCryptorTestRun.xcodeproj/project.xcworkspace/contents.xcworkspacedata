@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:RNCryptor Test Run.xcodeproj">
+      location = "self:RNCryptorTestRun.xcodeproj">
    </FileRef>
 </Workspace>
