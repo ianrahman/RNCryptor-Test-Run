@@ -16,10 +16,12 @@
 
 @property (strong, nonatomic) UITextField *password;
 @property (strong, nonatomic) UIStackView *stackView;
-@property (strong, nonatomic) UITextField *plaintext;
-@property (strong, nonatomic) UITextField *ciphertext;
+@property (strong, nonatomic) UITextField *textToConvert;
+@property (strong, nonatomic) UITextField *result;
 @property (strong, nonatomic) UIButton *convertButton;
 @property (nonatomic) BOOL direction;
+@property (strong, nonatomic) NSData *dataToConvert;
+@property (strong, nonatomic) NSData *convertedData;
 
 @end
 
@@ -34,13 +36,13 @@
     self.password.backgroundColor = [UIColor lightGrayColor];
     self.password.textColor = [UIColor whiteColor];
     
-    self.plaintext = [[UITextField alloc] init];
-    self.plaintext.placeholder = @"Plaintext";
-    self.plaintext.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
+    self.textToConvert = [[UITextField alloc] init];
+    self.textToConvert.placeholder = @"Text to Convert";
+    self.textToConvert.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
     
-    self.ciphertext = [[UITextField alloc]init];
-    self.ciphertext.placeholder = @"Ciphertext";
-    self.ciphertext.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
+    self.result = [[UITextField alloc]init];
+    self.result.placeholder = @"Result of Conversion";
+    self.result.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
     
     self.stackView = [[UIStackView alloc] init];
     self.stackView.axis = UILayoutConstraintAxisVertical;
@@ -48,8 +50,8 @@
     self.stackView.alignment = UIStackViewAlignmentCenter;
     self.stackView.spacing = 5;
     
-    [self.stackView addArrangedSubview:self.plaintext];
-    [self.stackView addArrangedSubview:self.ciphertext];
+    [self.stackView addArrangedSubview:self.textToConvert];
+    [self.stackView addArrangedSubview:self.result];
     
     self.convertButton = [[UIButton alloc] init];
     [self.convertButton setTitle:@"Encrypt" forState:UIControlStateNormal];
@@ -63,8 +65,8 @@
     // Turn off taslation of autoresizing masks into constraints
     [self.password setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.stackView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.plaintext setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.ciphertext setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.textToConvert setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.result setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.convertButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     // Set constraints and apperance for subviews
@@ -97,11 +99,11 @@
     NSLog(@"Convert button tapped! Conversion direction is %d", self.direction);
     
     if (sender.state == UIGestureRecognizerStateEnded) {
-        if (self.direction) {
-            [self encryptPlaintext];
+        if (!self.direction) {
+            [self encrypttextToConvert];
             [self.convertButton setTitle:@"Decrypt" forState:UIControlStateNormal];
         } else {
-            [self decryptCiphertext ];
+            [self decryptresult ];
             [self.convertButton setTitle:@"Encrypt" forState:UIControlStateNormal];
         }
     }
@@ -110,54 +112,57 @@
 }
 
 // Encryption
--(void)encryptPlaintext {
+-(void)encrypttextToConvert {
     
-    NSLog(@"Encrypting data");
+    NSLog(@"Encrypting the following text: %@", self.textToConvert.text);
     
-    NSData *data = [self.plaintext.text dataUsingEncoding:NSUTF8StringEncoding];
+    self.dataToConvert = [self.textToConvert.text dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSLog(@"Data to encrypt: %@", data);
+    NSLog(@"Data to encrypt: %@", self.dataToConvert);
     
     NSString *password = self.password.text;
     
-    NSData *ciphertext = [RNCryptor encryptData:data password:password];
+    self.convertedData = [RNCryptor encryptData:self.dataToConvert password:password];
     
-    NSLog(@"Ciphertext returned from RNCryptor: %@", ciphertext);
+    NSLog(@"Encrypted data returned from RNCryptor: %@", self.convertedData);
     
-    NSString *ciphertextString = [[NSString alloc] initWithData:ciphertext encoding:NSUTF8StringEncoding];
+    NSString *encryptedString = [[NSString alloc] initWithData:self.convertedData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"Ciphertext string: %@", ciphertextString);
+    NSLog(@"Encrypted string: %@", encryptedString);
     
-//    return ciphertextString;
+    [self updateResultTextWithString:encryptedString];
 }
 
 // Decryption
--(void)decryptCiphertext {
+-(void)decryptresult {
     
-    NSLog(@"Decrypting data");
+    NSLog(@"Decrypting the following string: %@", self.textToConvert.text);
     
-    NSData *ciphertext = [self.ciphertext.text dataUsingEncoding:NSUTF8StringEncoding];
+    self.dataToConvert = [self.textToConvert.text dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSLog(@"Ciphertext to decrypt: %@", ciphertext);
+    NSLog(@"Data to decrypt: %@", self.dataToConvert);
     
     NSString *password = self.password.text;
     
     NSError *error = nil;
     
-    NSData *plaintext = [RNCryptor decryptData:ciphertext password:password error:&error];
+    self.convertedData = [RNCryptor decryptData:self.dataToConvert password:password error:&error];
     
-    NSLog(@"Plaintext data returned from RNCryptor: %@", plaintext);
+    NSLog(@"Decrypted data returned from RNCryptor: %@", self.convertedData);
     
-    NSString *plaintextString = [[NSString alloc] initWithData:plaintext encoding:NSUTF8StringEncoding];
+    NSString *decryptedString = [[NSString alloc] initWithData:self.convertedData encoding:NSUTF8StringEncoding];
     
     if (error != nil) {
         NSLog(@"ERROR:%@", error);
-//        return error.description;
     }
     
-    NSLog(@"Plaintext string: %@", plaintextString);
-//    return plaintextString;
+    NSLog(@"Decrypted string: %@", decryptedString);
+    
+    [self updateResultTextWithString:decryptedString];
 }
 
+-(void)updateResultTextWithString:(NSString *)result {
+    self.result.text = result;
+}
 
 @end
