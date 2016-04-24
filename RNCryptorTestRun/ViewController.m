@@ -33,7 +33,7 @@
     self.plaintext.text = @"Input the text to be encrypted here";
     
     self.convertButton = [[UIButton alloc] init];
-    self.convertButton.titleLabel.text = @"Convert";
+    [self.convertButton setTitle:@"Convert" forState:UIControlStateNormal];
     self.convertButton.backgroundColor = [UIColor redColor];
     
     // Add the text field views and convert button to the main view
