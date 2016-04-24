@@ -15,7 +15,6 @@
 @interface ViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UITextField *password;
-@property (strong, nonatomic) UIStackView *stackView;
 @property (strong, nonatomic) UITextField *textToConvert;
 @property (strong, nonatomic) UILabel *result;
 @property (strong, nonatomic) UIButton *convertButton;
@@ -44,24 +43,18 @@
     self.result.text = @"Result of Conversion";
     self.result.backgroundColor = [UIColor greenColor];
     
-    self.stackView = [[UIStackView alloc] init];
-    self.stackView.axis = UILayoutConstraintAxisVertical;
-    self.stackView.distribution = UIStackViewDistributionEqualSpacing;
-    self.stackView.alignment = UIStackViewAlignmentCenter;
-    self.stackView.spacing = 1;
-    
     self.convertButton = [[UIButton alloc] init];
     [self.convertButton setTitle:@"Encrypt" forState:UIControlStateNormal];
     self.convertButton.backgroundColor = [UIColor redColor];
     
     // Add the text field views and convert button to the main view
     [self.view addSubview:self.password];
-    [self.view addSubview:self.stackView];
+    [self.view addSubview:self.textToConvert];
+    [self.view addSubview:self.result];
     [self.view addSubview:self.convertButton];
     
     // Turn off taslation of autoresizing masks into constraints
     [self.password setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.stackView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.textToConvert setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.result setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.convertButton setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -73,10 +66,15 @@
     [self.password.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.05].active = YES;
     [self.password.layer setCornerRadius:14.0f];
     
-    [self.stackView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [self.stackView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.8].active = YES;
-    [self.stackView.topAnchor constraintEqualToAnchor:self.password.bottomAnchor constant:10].active = YES;
-    [self.stackView.bottomAnchor constraintEqualToAnchor:self.convertButton.topAnchor constant:-10].active = YES;
+    [self.textToConvert.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [self.textToConvert.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.8].active = YES;
+    [self.textToConvert.topAnchor constraintEqualToAnchor:self.password.bottomAnchor constant:10].active = YES;
+    [self.textToConvert.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.1].active = YES;
+    
+    [self.result.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [self.result.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.8].active = YES;
+    [self.result.topAnchor constraintEqualToAnchor:self.textToConvert.bottomAnchor constant:10].active = YES;
+    [self.result.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.5].active = YES;
     
     [self.convertButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
     [self.convertButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-20].active = YES;
@@ -84,10 +82,6 @@
     [self.convertButton.heightAnchor constraintEqualToAnchor:self.password.heightAnchor].active = YES;
     self.convertButton.layer.cornerRadius = 10;
     self.convertButton.clipsToBounds = YES;
-    
-    // Add subviews to stackview
-    [self.stackView addArrangedSubview:self.textToConvert];
-    [self.stackView addArrangedSubview:self.result];
     
     // Add gestures recognizer to Convert button
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(convertButtonTapped:)];
