@@ -94,7 +94,7 @@
 
 -(IBAction)convertButtonTapped:(UIButton *)sender {
     
-    NSLog(@"Convert button tapped!");
+    NSLog(@"Convert button tapped! Conversion direction is %d", self.direction);
     
     if (sender.state == UIGestureRecognizerStateEnded) {
         if (self.direction) {
@@ -112,15 +112,21 @@
 // Encryption
 -(void)encryptPlaintext {
     
+    NSLog(@"Encrypting data");
+    
     NSData *data = [self.plaintext.text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSLog(@"Data to encrypt: %@", data);
     
     NSString *password = self.password.text;
     
     NSData *ciphertext = [RNCryptor encryptData:data password:password];
     
+    NSLog(@"Ciphertext returned from RNCryptor: %@", ciphertext);
+    
     NSString *ciphertextString = [[NSString alloc] initWithData:ciphertext encoding:NSUTF8StringEncoding];
     
-    NSLog(@"%@", ciphertextString);
+    NSLog(@"Ciphertext string: %@", ciphertextString);
     
 //    return ciphertextString;
 }
@@ -128,13 +134,19 @@
 // Decryption
 -(void)decryptCiphertext {
     
+    NSLog(@"Decrypting data");
+    
     NSData *ciphertext = [self.ciphertext.text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSLog(@"Ciphertext to decrypt: %@", ciphertext);
     
     NSString *password = self.password.text;
     
     NSError *error = nil;
     
     NSData *plaintext = [RNCryptor decryptData:ciphertext password:password error:&error];
+    
+    NSLog(@"Plaintext data returned from RNCryptor: %@", plaintext);
     
     NSString *plaintextString = [[NSString alloc] initWithData:plaintext encoding:NSUTF8StringEncoding];
     
@@ -143,13 +155,9 @@
 //        return error.description;
     }
     
-    NSLog(@"%@", plaintextString);
+    NSLog(@"Plaintext string: %@", plaintextString);
 //    return plaintextString;
 }
 
--(void)addPasswordTextField {
-    
-    
-}
 
 @end
