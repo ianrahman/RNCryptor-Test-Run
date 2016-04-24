@@ -112,17 +112,14 @@
     NSLog(@"Encrypting the following text: %@", self.textToConvert.text);
     
     self.dataToConvert = [self.textToConvert.text dataUsingEncoding:NSUTF8StringEncoding];
-    
     NSLog(@"Data to encrypt: %@", self.dataToConvert);
     
     NSString *password = self.password.text;
     
     self.convertedData = [RNCryptor encryptData:self.dataToConvert password:password];
-    
     NSLog(@"Encrypted data returned from RNCryptor: %@", self.convertedData);
     
     NSString *encryptedString = [self.convertedData description];
-    
     NSLog(@"Encrypted string: %@", [self.convertedData description]);
     
     [self updateResultTextWithString:encryptedString];
@@ -134,24 +131,20 @@
     NSLog(@"Decrypting the following string: %@", self.textToConvert.text);
     
     self.dataToConvert = [self.textToConvert.text dataUsingEncoding:NSUTF8StringEncoding];
-    
     NSLog(@"Data to decrypt: %@", self.dataToConvert);
     
     NSString *password = self.password.text;
-    
     NSError *error = nil;
     
     self.convertedData = [RNCryptor decryptData:self.dataToConvert password:password error:&error];
-    
     NSLog(@"Decrypted data returned from RNCryptor: %@", self.convertedData);
     
     NSString *decryptedString = [[NSString alloc] initWithData:self.convertedData encoding:NSUTF8StringEncoding];
+    NSLog(@"Decrypted string: %@", decryptedString);
     
     if (error != nil) {
-        NSLog(@"ERROR:%@", error);
+        NSLog(@"ERROR: %@", error.description);
     }
-    
-    NSLog(@"Decrypted string: %@", decryptedString);
     
     [self updateResultTextWithString:decryptedString];
 }
