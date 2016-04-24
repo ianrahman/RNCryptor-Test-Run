@@ -24,13 +24,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Initialize, set the placeholder text of the text fields and convert button
+    // Initialize and set the placeholder text of the text fields and convert button
     self.password = [[UITextField alloc] init];
     self.password.text = @"Input your password here";
     self.password.backgroundColor = [UIColor redColor];
     
     self.plaintext = [[UITextField alloc] init];
     self.plaintext.text = @"Input the text to be encrypted here";
+    self.plaintext.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
     
     self.convertButton = [[UIButton alloc] init];
     [self.convertButton setTitle:@"Convert" forState:UIControlStateNormal];
