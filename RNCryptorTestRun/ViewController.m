@@ -17,7 +17,7 @@
 @property (strong, nonatomic) UITextField *password;
 @property (strong, nonatomic) UIStackView *stackView;
 @property (strong, nonatomic) UITextField *textToConvert;
-@property (strong, nonatomic) UITextField *result;
+@property (strong, nonatomic) UILabel *result;
 @property (strong, nonatomic) UIButton *convertButton;
 @property (nonatomic) BOOL direction;
 @property (strong, nonatomic) NSData *dataToConvert;
@@ -40,18 +40,15 @@
     self.textToConvert.placeholder = @"Text to Convert";
     self.textToConvert.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
     
-    self.result = [[UITextField alloc]init];
-    self.result.placeholder = @"Result of Conversion";
-    self.result.backgroundColor = [UIColor colorWithRed:0.36 green:0.80 blue:0.83 alpha:1.0];
+    self.result = [[UILabel alloc]init];
+    self.result.text = @"Result of Conversion";
+    self.result.backgroundColor = [UIColor greenColor];
     
     self.stackView = [[UIStackView alloc] init];
     self.stackView.axis = UILayoutConstraintAxisVertical;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
-    self.stackView.spacing = 5;
-    
-    [self.stackView addArrangedSubview:self.textToConvert];
-    [self.stackView addArrangedSubview:self.result];
+    self.stackView.spacing = 1;
     
     self.convertButton = [[UIButton alloc] init];
     [self.convertButton setTitle:@"Encrypt" forState:UIControlStateNormal];
@@ -88,6 +85,10 @@
     self.convertButton.layer.cornerRadius = 10;
     self.convertButton.clipsToBounds = YES;
     
+    // Add subviews to stackview
+    [self.stackView addArrangedSubview:self.textToConvert];
+    [self.stackView addArrangedSubview:self.result];
+    
     // Add gestures recognizer to Convert button
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(convertButtonTapped:)];
     [self.convertButton addGestureRecognizer:tapGestureRecognizer];
@@ -99,11 +100,11 @@
     NSLog(@"Convert button tapped! Conversion direction is %d", self.direction);
     
     if (sender.state == UIGestureRecognizerStateEnded) {
-        if (!self.direction) {
-            [self encrypttextToConvert];
+        if (self.direction) {
+            [self decrypt];
             [self.convertButton setTitle:@"Decrypt" forState:UIControlStateNormal];
         } else {
-            [self decryptresult ];
+            [self encrypt];
             [self.convertButton setTitle:@"Encrypt" forState:UIControlStateNormal];
         }
     }
@@ -112,7 +113,7 @@
 }
 
 // Encryption
--(void)encrypttextToConvert {
+-(void)encrypt {
     
     NSLog(@"Encrypting the following text: %@", self.textToConvert.text);
     
@@ -126,15 +127,15 @@
     
     NSLog(@"Encrypted data returned from RNCryptor: %@", self.convertedData);
     
-    NSString *encryptedString = [[NSString alloc] initWithData:self.convertedData encoding:NSUTF8StringEncoding];
+    NSString *encryptedString = [self.convertedData description];
     
-    NSLog(@"Encrypted string: %@", encryptedString);
+    NSLog(@"Encrypted string: %@", [self.convertedData description]);
     
     [self updateResultTextWithString:encryptedString];
 }
 
 // Decryption
--(void)decryptresult {
+-(void)decrypt {
     
     NSLog(@"Decrypting the following string: %@", self.textToConvert.text);
     
@@ -161,6 +162,7 @@
     [self updateResultTextWithString:decryptedString];
 }
 
+// Update text in result field
 -(void)updateResultTextWithString:(NSString *)result {
     self.result.text = result;
 }
